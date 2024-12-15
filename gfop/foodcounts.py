@@ -2,7 +2,7 @@
 
 # Standard library imports
 import os
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 # Third-party imports
 import numpy as np
@@ -337,3 +337,77 @@ class FoodCounts:
             .map(filename_to_group)
             .fillna(self.sample_metadata["group"])
         )
+    def generate_foodflows(
+    self, 
+    max_hierarchy_level: Optional[int] = None, 
+    filename_filter: Optional[str] = None
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Generates food flows and processes across ontology levels, with options for 
+        filtering by a specific sample and specifying a maximum hierarchy level.
+
+        Parameters
+        ----------
+        max_hierarchy_level : int, optional
+            The maximum level to calculate flows up to. Defaults to the instance's levels.
+        filename_filter : str, optional
+            A specific sample filename to filter by. If None, the full counts dataframe is used.
+
+        Returns
+        -------
+        Tuple[pd.DataFrame, pd.DataFrame]
+            A tuple containing:
+            - flows: DataFrame with source, target, and value columns.
+            - processes: DataFrame with unique nodes across the levels.
+        """
+        # Use provided max_hierarchy_level or default to the instance's levels
+        max_level = max_hierarchy_level if max_hierarchy_level is not None else self.levels
+
+        # Filter counts by filename if a filter is specified
+        if filename_filter:
+            counts = self.counts[self.counts["filename"] == filename_filter]
+        else:
+            counts = self.counts
+
+        flows = []
+        
+        for i in range(1, max_level):
+            # Set source and target level for the current iteration
+            source_level = i
+            target_level = i + 1
+
+            # Group food counts at target level
+            target_counts = (
+                counts[counts['level'] == target_level]
+                .groupby('food_type')['count']
+                .sum()
+                .reset_index()
+            )
+
+            # Merge with sample_types to find corresponding source level
+            merged_df = pd.merge(
+                target_counts,
+                self.sample_types,
+                left_on='food_type',
+                right_on=f"sample_type_group{target_level}"
+            )[[f"sample_type_group{source_level}", 'food_type', 'count']].drop_duplicates()
+
+            # Rename columns for source-target relationship and add levels for uniqueness
+            flow = merged_df.rename(columns={f"sample_type_group{source_level}": "source", "food_type": "target"})
+            flow["source"] = flow["source"] + f"_{source_level}"
+            flow["target"] = flow["target"] + f"_{target_level}"
+            flow.rename(columns={"count": "value"}, inplace=True)
+
+            flows.append(flow)
+
+        # Concatenate flows into a single DataFrame
+        flows_df = pd.concat(flows, ignore_index=True)
+
+        # Build processes from unique nodes in flows
+        all_nodes = pd.concat([flows_df["source"], flows_df["target"]]).unique()
+        processes_df = pd.DataFrame({
+            "id": all_nodes,
+            "level": [int(node.split('_')[-1]) for node in all_nodes]
+        }).set_index("id")
+
+        return flows_df, processes_df
