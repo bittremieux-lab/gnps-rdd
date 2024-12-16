@@ -1,0 +1,430 @@
+descriptor;order_num;color_code
+plant_1;1;#458B00
+animal_1;2;#8B1A1A
+fungi_1;3;#A020F0
+algae_1;4;#3CB371
+mineral_1;5;#4D4D4D
+supplement_1;6;#707070
+water_1;7;#939393
+complex_1;8;#B6B6B6
+fruit_2;9;#2AC469
+sap_2;10;#548B54
+vegetable/herb_2;11;#228B22
+animal_2;12;#8B1A1A
+arthropod_2;13;#EEDD82
+gastropod_2;14;#CD8162
+insect_2;15;#8B6508
+invertebrate_2;16;#FFDEAD
+fungi_2;17;#A020F0
+algae_2;18;#3CB371
+mineral_2;19;#4D4D4D
+supplement_2;20;#707070
+water_2;21;#939393
+complex_2;22;#B6B6B6
+fleshy fruit_3;23;#008B45
+legume_3;24;#556B2F
+grain/grass_3;25;#597131
+achene_3;26;#5F7734
+nut_3;27;#647E37
+seed_3;28;#69843A
+sap_3;29;#548B54
+vegetable/herb_3;30;#556B2F
+seafood_3;31;#8B3A3A
+meat_3;32;#CD2626
+poultry_3;33;#CD919E
+game meat_3;34;#CD3333
+reptile_3;35;#8B2252
+egg_3;36;#CD5B45
+dairy_3;37;#CDC9A5
+honey_3;38;#FFC125
+arthropod_3;39;#EEDD82
+gastropod_3;40;#CD8162
+insect_3;41;#B8860B
+invertebrate_3;42;#FFDEAD
+fungi_3;43;#A020F0
+algae_3;44;#3CB371
+seaweed_3;45;#2E8B57
+mineral_3;46;#4D4D4D
+supplement_3;47;#707070
+water_3;48;#939393
+complex_3;49;#B6B6B6
+pseudocarp_4;50;#00FF7F
+pepo_4;51;#00F87B
+drupe_4;52;#00F278
+citrus_4;53;#00EC75
+pome_4;54;#00E672
+multifruit_4;55;#00DF6F
+berry_4;56;#00D96C
+drupe_aggregate_4;57;#00D369
+not provided_4;58;#00CD66
+legume_4;59;#556B2F
+grain/grass_4;60;#597131
+achene_4;61;#5F7734
+nut_4;62;#647E37
+seed_4;63;#69843A
+sap_4;64;#548B54
+vegetable_4;65;#00FF00
+herb/spice_4;66;#00E800
+tea/infusion_4;67;#00D200
+flower_4;68;#00BC00
+cactus_4;69;#00A600
+sugarcane_4;70;#009000
+artificial sweetener_4;71;
+corn husk_4;72;
+pod_4;73;#007A00
+citrus leaf_4;74;#006400
+shellfish_4;75;#CD5C5C
+fish_saltwater_4;76;#CD5959
+fish_freshwater_4;77;#CD5757
+octopus_4;78;#CD5555
+cow_4;79;#B22222
+lamb_4;80;#BA2323
+bison_4;81;#C32424
+pig_4;82;#CB2626
+meat_undetermined_4;83;#D42727
+horse_4;84;#DC2929
+rat_4;85;#E52A2A
+mouse_4;86;#EE2C2C
+poultry_4;87;#FFC0CB
+waterfowl_4;88;#EEA9B8
+rabbit_4;89;#A52A2A
+elk_4;90;#BD2F2F
+buffalo_4;91;#D53535
+ostrich_4;92;#EE3B3B
+lizard_4;93;#CD3278
+egg_fish_4;94;#FF7F50
+egg_poultry_4;95;#E66D4A
+milk_4;96;#FFFACD
+butter_4;97;#FBF6CA
+cream_4;98;#F8F3C7
+ice cream_4;99;#F4EFC4
+cheese_4;100;#F1ECC1
+yogurt_4;101;#EEE9BF
+honey_4;102;#FFC125
+arthropod_4;103;#EEDD82
+snail_4;104;#FFA07A
+cricket_4;105;#FFB90F
+ant_4;106;#E6A70D
+insect_4;107;#E6A70D
+grasshopper_4;108;#CD950C
+worm_4;109;#CDB38B
+yeast_4;110;#9B30FF
+mushroom_4;111;#8B2BE6
+truffle_4;112;#7D26CD
+algae_4;113;#3CB371
+seaweed_4;114;#2E8B57
+mineral_4;115;#4D4D4D
+supplement_4;116;#707070
+water_4;117;#939393
+complex_4;118;#B6B6B6
+strawberry_5;119;#D3D3D3
+cucumber_5;120;#D3D3D3
+melon_5;121;#D3D3D3
+pumpkin_5;122;#D3D3D3
+squash_5;123;#D3D3D3
+almond_5;124;#D3D3D3
+cashew_5;125;#D3D3D3
+pecan_5;126;#D3D3D3
+walnut_5;127;#D3D3D3
+cocoa seed_5;128;#D3D3D3
+coconut_5;129;#D3D3D3
+copohazu_5;130;#D3D3D3
+macadamia_5;131;#D3D3D3
+pistachio_5;132;#D3D3D3
+olive_5;133;#D3D3D3
+date_5;134;#D3D3D3
+cherry_5;135;#D3D3D3
+plum_5;136;#D3D3D3
+apricot_5;137;#D3D3D3
+nectarine_5;138;#D3D3D3
+peach_5;139;#D3D3D3
+mango_5;140;#D3D3D3
+lemon_5;141;#D3D3D3
+lime_5;142;#D3D3D3
+bergamot_5;143;#D3D3D3
+clementine_5;144;#D3D3D3
+kumquat_5;145;#D3D3D3
+mandarin_5;146;#D3D3D3
+orange_5;147;#D3D3D3
+pomelo_5;148;#D3D3D3
+grapefruit_5;149;#D3D3D3
+apple_5;150;#D3D3D3
+apple_cider_5;151;#D3D3D3
+pear_5;152;#D3D3D3
+quince_5;153;#D3D3D3
+fig_5;154;#D3D3D3
+mulberry_5;155;#D3D3D3
+pineapple_5;156;#D3D3D3
+acai_5;157;#D3D3D3
+banana_5;158;#D3D3D3
+plantain_5;159;#D3D3D3
+kiwi_5;160;#D3D3D3
+blueberry_5;161;#D3D3D3
+grape_5;162;#D3D3D3
+grape_fermented_5;163;#D3D3D3
+cranberry_5;164;#D3D3D3
+golden berry_5;165;#D3D3D3
+passionfruit_5;166;#D3D3D3
+mangosteen_5;167;#D3D3D3
+guava_5;168;#D3D3D3
+dragonfruit_5;169;#D3D3D3
+pitaya_5;170;#D3D3D3
+papaya_5;171;#D3D3D3
+persimmon_5;172;#D3D3D3
+pomegranate_5;173;#D3D3D3
+sumac_5;174;#D3D3D3
+tupiro_5;175;#D3D3D3
+coffee_5;176;#D3D3D3
+juniper berry;177;#D3D3D3
+betel nut_5;178;#D3D3D3
+wonderberry_5;179;#D3D3D3
+ground cherry_5;180;#D3D3D3
+tomato_5;181;#D3D3D3
+pepper_5;182;#D3D3D3
+eggplant_5;183;#D3D3D3
+avocado_5;184;#D3D3D3
+blackberry_5;185;#D3D3D3
+raspberry_5;186;#D3D3D3
+cocura_5;187;#D3D3D3
+guada hervida_5;188;#D3D3D3
+moriche palm_5;189;#D3D3D3
+palm fruit_5;190;#D3D3D3
+bean_5;191;#D3D3D3
+lentil_5;192;#D3D3D3
+pea_5;193;#D3D3D3
+peanut_5;194;#D3D3D3
+amaranth_5;195;#D3D3D3
+barley_5;196;#D3D3D3
+buckwheat_5;197;#D3D3D3
+bulgur wheat_5;198;#D3D3D3
+canola_5;199;#D3D3D3
+chia_5;200;#D3D3D3
+cicerchia_5;201;#D3D3D3
+corn_5;202;#D3D3D3
+farro_5;203;#D3D3D3
+fava bean_5;204;#D3D3D3
+flax seed_5;205;#D3D3D3
+hemp seed_5;206;#D3D3D3
+lotus seed_5;207;#D3D3D3
+millet_5;208;#D3D3D3
+oat_5;209;#D3D3D3
+poppy seed_5;210;#D3D3D3
+quinoa_5;211;#D3D3D3
+rice_5;212;#D3D3D3
+sesame_5;213;#D3D3D3
+wheat_5;214;#D3D3D3
+grain_fermented_5;215;#D3D3D3
+sunflower_5;216;#D3D3D3
+hazelnut_5;217;#D3D3D3
+brazil nut_5;218;#D3D3D3
+pine nut_5;219;#D3D3D3
+sesame seed_5;220;#D3D3D3
+maple syrup_5;221;#D3D3D3
+molasses_5;222;#D3D3D3
+betel nut leaf_5;223;#D3D3D3
+arugula_5;224;#D3D3D3
+lettuce_5;225;#D3D3D3
+mustard greens_5;226;#D3D3D3
+radish greens_5;227;#D3D3D3
+spinach_5;228;#D3D3D3
+potato leaf_5;229;#D3D3D3
+bok choy_5;230;#D3D3D3
+kale_5;231;#D3D3D3
+chard_5;232;#D3D3D3
+collard greens_5;233;#D3D3D3
+dandelion green_5;234;#D3D3D3
+escarole_5;235;#D3D3D3
+fennel_5;236;#D3D3D3
+hemp_5;237;#D3D3D3
+celery_5;238;#D3D3D3
+carrot_5;239;#D3D3D3
+galangal_5;240;#D3D3D3
+ginger_5;241;#D3D3D3
+garlic_5;242;#D3D3D3
+radish_5;243;#D3D3D3
+jicama_5;244;#D3D3D3
+kohlrabi_5;245;#D3D3D3
+asparagus_5;246;#D3D3D3
+grass_5;247;#D3D3D3
+hay_5;248;#D3D3D3
+hops_5;249;#D3D3D3
+hearts of palm_5;250;#D3D3D3
+leek_5;251;#D3D3D3
+onion_5;252;#D3D3D3
+lemon grass_5;253;#D3D3D3
+nasturtium leaf_5;254;#D3D3D3
+rhubarb_5;255;#D3D3D3
+sunchoke_5;256;#D3D3D3
+sweet potato_5;257;#D3D3D3
+potato_5;258;#D3D3D3
+cassava_5;259;#D3D3D3
+taro_5;260;#D3D3D3
+watercress_5;261;#D3D3D3
+yuca_5;262;#D3D3D3
+beet_5;263;#D3D3D3
+basil_5;264;#D3D3D3
+bay leaf_5;265;#D3D3D3
+borage leaf_5;266;#D3D3D3
+cannabis leaf_5;267;#D3D3D3
+chive stem_5;268;#D3D3D3
+cilantro_5;269;#D3D3D3
+curry plant_5;270;#D3D3D3
+dill_5;271;#D3D3D3
+hing powder_5;272;#D3D3D3
+laurel_5;273;#D3D3D3
+lemon balm_5;274;#D3D3D3
+lime leaf_5;275;#D3D3D3
+tarragon_5;276;#D3D3D3
+mushroom plant_5;277;#D3D3D3
+parsley_5;278;#D3D3D3
+thyme_5;279;#D3D3D3
+marjoram_5;280;#D3D3D3
+oregano_5;281;#D3D3D3
+rosemary_5;282;#D3D3D3
+mint_5;283;#D3D3D3
+sage_5;284;#D3D3D3
+saffron_5;285;#D3D3D3
+garlic powder_5;286;#D3D3D3
+anise_5;287;#D3D3D3
+cardamom_5;288;#D3D3D3
+cinnamon_5;289;#D3D3D3
+cloves_5;290;#D3D3D3
+licorice_5;291;#D3D3D3
+nutmeg_5;292;#D3D3D3
+spice_5;293;#D3D3D3
+turmeric_5;294;#D3D3D3
+infusion_5;295;#D3D3D3
+tea_5;296;#D3D3D3
+kombucha_5;297;#D3D3D3
+artichoke_5;298;#D3D3D3
+broccoli_5;299;#D3D3D3
+cauliflower_5;300;#D3D3D3
+brussel sprout_5;301;#D3D3D3
+cabbage_5;302;#D3D3D3
+chive blossom_5;303;#D3D3D3
+dill flower_5;304;#D3D3D3
+flower_5;305;#D3D3D3
+lavender_5;306;#D3D3D3
+marigold_5;307;#D3D3D3
+nasturtium_5;308;#D3D3D3
+pumpkin blossom_5;309;#D3D3D3
+borage flower_5;310;#D3D3D3
+rose_5;311;#D3D3D3
+squash blossom_5;312;#D3D3D3
+cactus_5;313;#D3D3D3
+sugarcane_5;314;#D3D3D3
+sugar_5;315;#D3D3D3
+soda_5;316;#D3D3D3
+artificial sweetener_5;317;#D3D3D3
+vanilla bean_5;318;#D3D3D3
+orange leaf_5;319;#D3D3D3
+corn husk_5;320;#D3D3D3
+langostino_5;321;#D3D3D3
+shrimp_5;322;#D3D3D3
+squid_5;323;#D3D3D3
+ahi tuna_5;324;#D3D3D3
+anchovy_5;325;#D3D3D3
+bonito_5;326;#D3D3D3
+bony fish_5;327;#D3D3D3
+butterfish_5;328;#D3D3D3
+cod_5;329;#D3D3D3
+fish_undetermined_5;330;#D3D3D3
+herring_5;331;#D3D3D3
+mackerel_5;332;#D3D3D3
+rock fish_5;333;#D3D3D3
+sardine_5;334;#D3D3D3
+silversides_5;335;#D3D3D3
+smelt_5;336;#D3D3D3
+salmon_5;337;#D3D3D3
+trout_5;338;#D3D3D3
+octopus_5;339;#D3D3D3
+beef_5;340;#D3D3D3
+veal_5;341;#D3D3D3
+lamb_5;342;#D3D3D3
+bison_5;343;#D3D3D3
+pig_5;344;#D3D3D3
+meat_undetermined_5;345;#D3D3D3
+horse_5;346;#D3D3D3
+rat_5;347;#D3D3D3
+mouse_5;348;#D3D3D3
+chicken_5;349;#D3D3D3
+turkey_5;350;#D3D3D3
+duck_5;351;#D3D3D3
+rabbit_5;352;#D3D3D3
+elk_5;353;#D3D3D3
+buffalo_5;354;#D3D3D3
+ostrich_5;355;#D3D3D3
+lizard_5;356;#D3D3D3
+egg_salmon_5;357;#D3D3D3
+egg_chicken_5;358;#D3D3D3
+egg_quail_5;359;#D3D3D3
+milk_5;360;#D3D3D3
+milk_cow_5;361;#D3D3D3
+milk_goat_5;362;#D3D3D3
+butter_5;363;#D3D3D3
+cream_5;364;#D3D3D3
+sour cream_5;365;#D3D3D3
+ice cream_5;366;#D3D3D3
+american cheese_5;367;#D3D3D3
+bloomy cheese_5;368;#D3D3D3
+blue cheese_5;369;#D3D3D3
+boschetto cheese_5;370;#D3D3D3
+brie cheese_5;371;#D3D3D3
+cheddar cheese_5;372;#D3D3D3
+cheese_5;373;#D3D3D3
+cream cheese_5;374;#D3D3D3
+dubliner cheese_5;375;#D3D3D3
+feta cheese_5;376;#D3D3D3
+goat cheese_5;377;#D3D3D3
+gouda cheese_5;378;#D3D3D3
+havarti cheese_5;379;#D3D3D3
+Iberico cheese_5;380;#D3D3D3
+jack cheese_5;381;#D3D3D3
+manchego cheese_5;382;#D3D3D3
+midnight moon cheese_5;383;#D3D3D3
+mozzarella cheese_5;384;#D3D3D3
+natural cheese_5;385;#D3D3D3
+not collected_5;386;#D3D3D3
+parmesan cheese_5;387;#D3D3D3
+pecorino cheese_5;388;#D3D3D3
+petit basque cheese_5;389;#D3D3D3
+provolone_5;390;#D3D3D3
+raclette cheese_5;391;#D3D3D3
+ricotta cheese_5;392;#D3D3D3
+sarro di bufala cheese_5;393;#D3D3D3
+stilton cheese_5;394;#D3D3D3
+string cheese_5;395;#D3D3D3
+tomme brulee cheese_5;396;#D3D3D3
+washed cheese_5;397;#D3D3D3
+wine cheese_5;398;#D3D3D3
+yogurt_cow_5;399;#D3D3D3
+honey_5;400;#D3D3D3
+tarantula_5;401;#D3D3D3
+snail_5;402;#D3D3D3
+cricket_5;403;#D3D3D3
+ant_5;404;#D3D3D3
+grasshopper_5;405;#D3D3D3
+insect_5;406;#D3D3D3
+silkworm_5;407;#D3D3D3
+worm_5;408;#D3D3D3
+yeast_5;409;#D3D3D3
+mushroom_5;410;#D3D3D3
+truffle black_5;411;#D3D3D3
+truffle hooked_5;412;#D3D3D3
+algae_5;413;#D3D3D3
+dulse_5;414;#D3D3D3
+kelp_5;415;#D3D3D3
+nori_5;416;#D3D3D3
+seaweed_5;417;#D3D3D3
+calcium carbonate_5;418;#D3D3D3
+calcium hydroxide_5;419;#D3D3D3
+salt_5;420;#D3D3D3
+supplement_5;421;#D3D3D3
+water_5;422;#D3D3D3
+complex_5;423;#D3D3D3
+unmatched_1;999;#D3D3D3
+unmatched_2;999;#D3D3D3
+unmatched_3;999;#D3D3D3
+unmatched_4;999;#D3D3D3
+unmatched_5;999;#D3D3D3
+unmatched_6;999;#D3D3D3
