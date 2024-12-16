@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from importlib import resources
 
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "gfop"))
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "rdd"))
 sys.path.append(project_path)
 
 from RDDcounts import RDDCounts

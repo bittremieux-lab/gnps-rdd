@@ -3,8 +3,8 @@ import sys
 import pytest
 import pandas as pd
 
-# Add the path to the 'gfop' directory to the system path
-project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "gfop"))
+# Add the path to the 'rdd' directory to the system path
+project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "rdd"))
 sys.path.append(project_path)
 
 from RDDcounts import RDDCounts
