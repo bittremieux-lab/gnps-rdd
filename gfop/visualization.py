@@ -16,9 +16,8 @@ from collections import defaultdict
 
 
 # Internal imports
-from foodcounts import FoodCounts
-from foodflows import FoodFlows
-from utils import food_counts_to_wide, calculate_proportions
+from RDDcounts import RDDCounts
+from utils import RDD_counts_to_wide, calculate_proportions
 
 def sort_nodes_by_flow(flows_df, processes_df):
     """
@@ -113,9 +112,9 @@ from typing import Tuple
 import pandas as pd
 
 
-class VisualizationBackend(ABC):
+class VisualizationBackend(ABC):  # pragma: no cover
     @abstractmethod
-    def plot_food_type_distribution(
+    def plot_reference_type_distribution(
         self,
         data: pd.DataFrame,
         group_by: bool,
@@ -125,7 +124,7 @@ class VisualizationBackend(ABC):
         pass
 
     @abstractmethod
-    def box_plot_food_proportions(
+    def box_plot_RDD_proportions(
         self,
         data: pd.DataFrame,
         group_by: bool = False,
@@ -136,7 +135,7 @@ class VisualizationBackend(ABC):
         pass
 
     @abstractmethod
-    def plot_food_proportion_heatmap(
+    def plot_RDD_proportion_heatmap(
         self,
         data: pd.DataFrame,
         level: int,
@@ -171,7 +170,7 @@ class VisualizationBackend(ABC):
     @abstractmethod
     def plot_sankey(
         self,
-        food_counts: "FoodCounts",
+        RDD_counts: "RDDCounts",
         color_mapping_file: str,
         max_hierarchy_level: Optional[int] = None,
         filename_filter: Optional[str] = None,
@@ -179,23 +178,23 @@ class VisualizationBackend(ABC):
     ) -> go.Figure:
         pass
 
-def filter_and_group_food_counts(
-    food_counts_instance: "FoodCounts",
+def filter_and_group_RDD_counts(
+    RDD_counts_instance: "RDDCounts",
     level: int,
-    food_types: Optional[List[str]] = None,
+    reference_types: Optional[List[str]] = None,
     group_by: bool = False,
 ) -> pd.DataFrame:
     """
-    Filter and group the food counts data by ontology level and food types.
+    Filter and group the RDD counts data by ontology level and reference types.
 
     Parameters
     ----------
-    food_counts_instance : FoodCounts
-        An instance of the FoodCounts class containing the food counts data.
+    RDD_counts_instance : RDDCounts
+        An instance of the RDDCounts class containing the RDD counts data.
     level : int
         The ontology level to filter by.
-    food_types : list of str, optional
-        Specific food types to include in the filtered data. If None, all food types
+    reference_types : list of str, optional
+        Specific reference types to include in the filtered data. If None, all reference types
         are included. Defaults to None.
     group_by : bool, optional
         Whether to group the data by the 'group' column. Defaults to False.
@@ -203,123 +202,123 @@ def filter_and_group_food_counts(
     Returns
     -------
     pd.DataFrame
-        The filtered and grouped food counts data.
+        The filtered and grouped RDD counts data.
 
     Raises
     ------
     ValueError
-        If no data is available for the specified level and food types.
+        If no data is available for the specified level and reference types.
     """
     # Filter the data
-    filtered_counts = food_counts_instance.filter_counts(food_types=food_types, level=level)
+    filtered_counts = RDD_counts_instance.filter_counts(reference_types=reference_types, level=level)
 
     if filtered_counts.empty:
-        raise ValueError("No data available for the specified level and food types.")
+        raise ValueError("No data available for the specified level and reference types.")
 
     # Group the data
     if group_by:
-        data = filtered_counts.groupby(["food_type", "group"])["count"].sum().reset_index()
+        data = filtered_counts.groupby(["reference_type", "group"])["count"].sum().reset_index()
     else:
-        data = filtered_counts.groupby("food_type")["count"].sum().reset_index()
+        data = filtered_counts.groupby("reference_type")["count"].sum().reset_index()
 
     return data
 
 def prepare_boxplot_data(
-    food_counts_instance: "FoodCounts",
+    RDD_counts_instance: "RDDCounts",
     level: int,
-    food_types: Optional[List[str]] = None,
+    reference_types: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """
-    Prepare the food proportions data for box plotting.
+    Prepare the RDD proportions data for box plotting.
 
     Parameters
     ----------
-    food_counts_instance : FoodCounts
-        An instance of the FoodCounts class containing the food counts data.
+    RDD_counts_instance : RDDCounts
+        An instance of the RDDCounts class containing the RDD counts data.
     level : int
         The ontology level to filter by.
-    food_types : list of str, optional
-        Specific food types to include. If None, all food types are included.
+    reference_types : list of str, optional
+        Specific reference types to include. If None, all reference types are included.
 
     Returns
     -------
     pd.DataFrame
-        A long-format DataFrame with columns 'food_type', 'group', and 'proportion'.
+        A long-format DataFrame with columns 'reference_type', 'group', and 'proportion'.
 
     Raises
     ------
     ValueError
-        If no food types are provided or if the filtered data is empty.
+        If no reference types are provided or if the filtered data is empty.
     """
     # Access counts and calculate proportions
-    counts = food_counts_instance.counts
+    counts = RDD_counts_instance.counts
     df_proportions = calculate_proportions(counts, level=level)
 
     # Convert to long format
     df_long = df_proportions.reset_index().melt(
         id_vars=["filename", "group"],
-        var_name="food_type",
+        var_name="reference_type",
         value_name="proportion",
     )
 
-    # Filter by food types
-    if food_types:
-        df_long = df_long[df_long["food_type"].isin(food_types)]
+    # Filter by reference types
+    if reference_types:
+        df_long = df_long[df_long["reference_type"].isin(reference_types)]
 
     if df_long.empty:
-        raise ValueError("No data available for the specified food types.")
+        raise ValueError("No data available for the specified reference types.")
 
     return df_long
 
 def prepare_heatmap_data(
-    food_counts_instance: "FoodCounts",
+    RDD_counts_instance: "RDDCounts",
     level: int,
-    food_types: Optional[List[str]] = None,
+    reference_types: Optional[List[str]] = None,
 ) -> pd.DataFrame:
     """
-    Prepare the food proportions data for the heatmap.
+    Prepare the RDD proportions data for the heatmap.
 
     Parameters
     ----------
-    food_counts_instance : FoodCounts
-        An instance of the FoodCounts class containing the food counts data.
+    RDD_counts_instance : RDDCounts
+        An instance of the RDDCounts class containing the RDD counts data.
     level : int
         The ontology level to filter by.
-    food_types : list of str, optional
-        Specific food types to include in the heatmap. If None, all food types
+    reference_types : list of str, optional
+        Specific reference types to include in the heatmap. If None, all reference types
         are included. Defaults to None.
 
     Returns
     -------
     pd.DataFrame
-        A DataFrame containing the proportions for the selected food types and level.
+        A DataFrame containing the proportions for the selected reference types and level.
     """
     # Access counts and calculate proportions
-    counts = food_counts_instance.counts
+    counts = RDD_counts_instance.counts
     df_proportions = calculate_proportions(counts, level=level)
 
-    # Filter by food types
-    if food_types is not None:
+    # Filter by reference types
+    if reference_types is not None:
         df_proportions_filtered = df_proportions[
-            df_proportions.columns.intersection(food_types)
+            df_proportions.columns.intersection(reference_types)
         ]
     else:
         df_proportions_filtered = df_proportions
 
     # Ensure only numeric columns remain
-    food_type_columns = df_proportions_filtered.select_dtypes(include=["int", "float"]).columns
-    return df_proportions_filtered[food_type_columns]
+    reference_type_columns = df_proportions_filtered.select_dtypes(include=["int", "float"]).columns
+    return df_proportions_filtered[reference_type_columns]
 
 class MatplotlibBackend(VisualizationBackend):
 
-    def plot_food_type_distribution(
+    def plot_reference_type_distribution(
         self, data: pd.DataFrame, group_by: bool, figsize: Tuple[int, int], **kwargs
     ):
         fig, ax = plt.subplots(figsize=figsize)
 
         if group_by:
             sns.barplot(
-                x="food_type",
+                x="reference_type",
                 y="count",
                 hue="group",
                 data=data,
@@ -328,21 +327,21 @@ class MatplotlibBackend(VisualizationBackend):
             )
         else:
             sns.barplot(
-                x="food_type",
+                x="reference_type",
                 y="count",
                 data=data,
                 palette="viridis",
                 ax=ax,
             )
 
-        ax.set_title("Food Type Distribution")
-        ax.set_xlabel("Food Type")
+        ax.set_title("reference type Distribution")
+        ax.set_xlabel("reference type")
         ax.set_ylabel("Total Count")
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
         return fig
     
-    def box_plot_food_proportions(
+    def box_plot_RDD_proportions(
         self,
         data: pd.DataFrame,
         group_by: bool = False,
@@ -355,7 +354,7 @@ class MatplotlibBackend(VisualizationBackend):
         if group_by:
             # Grouped boxplot using 'hue'
             sns.boxplot(
-                x="food_type",
+                x="reference_type",
                 y="proportion",
                 hue="group",
                 data=data,
@@ -364,7 +363,7 @@ class MatplotlibBackend(VisualizationBackend):
                 **kwargs,
             )
             sns.stripplot(
-                x="food_type",
+                x="reference_type",
                 y="proportion",
                 hue="group",
                 data=data,
@@ -381,7 +380,7 @@ class MatplotlibBackend(VisualizationBackend):
         else:
             # Ungrouped boxplot
             sns.boxplot(
-                x="food_type",
+                x="reference_type",
                 y="proportion",
                 data=data,
                 ax=ax,
@@ -389,7 +388,7 @@ class MatplotlibBackend(VisualizationBackend):
                 **kwargs,
             )
             sns.stripplot(
-                x="food_type",
+                x="reference_type",
                 y="proportion",
                 data=data,
                 dodge=True,  # No separation
@@ -403,15 +402,15 @@ class MatplotlibBackend(VisualizationBackend):
                 legend=False,  # Disable legend for stripplot
             )
 
-        ax.set_title("Proportion Distribution of Selected Food Types")
-        ax.set_xlabel("Food Type")
+        ax.set_title("Proportion Distribution of Selected reference types")
+        ax.set_xlabel("reference type")
         ax.set_ylabel("Proportion")
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
 
         return fig
     
-    def plot_food_proportion_heatmap(
+    def plot_RDD_proportion_heatmap(
         self,
         data: pd.DataFrame,
         level: int,
@@ -419,12 +418,12 @@ class MatplotlibBackend(VisualizationBackend):
         **kwargs,
     ):
         """
-        Render a heatmap of food proportions using Seaborn.
+        Render a heatmap of RDD proportions using Seaborn.
 
         Parameters
         ----------
         data : pd.DataFrame
-            The processed data containing food proportions.
+            The processed data containing RDD proportions.
         level : int
             The ontology level of the data.
         figsize : tuple of int, optional
@@ -439,8 +438,8 @@ class MatplotlibBackend(VisualizationBackend):
         ax = sns.heatmap(
             data, cmap="viridis", annot=False, cbar=True, **kwargs
         )
-        ax.set_title(f"Proportion Heatmap of Food Types (Level {level})")
-        ax.set_xlabel("Food Types")
+        ax.set_title(f"Proportion Heatmap of reference types (Level {level})")
+        ax.set_xlabel("reference types")
         ax.set_ylabel("Samples")
         plt.xticks(rotation=45, ha="right")
         plt.tight_layout()
@@ -496,7 +495,7 @@ class MatplotlibBackend(VisualizationBackend):
         else:
             sns.scatterplot(x=x_pc, y=y_pc, data=pca_df, ax=ax)
 
-        ax.set_title("PCA Plot of Food Counts")
+        ax.set_title("PCA Plot of RDD Counts")
         ax.set_xlabel(f"{x_pc} [{explained_variance[int(x_pc[2]) - 1] * 100:.1f}%]")
         ax.set_ylabel(f"{y_pc} [{explained_variance[int(y_pc[2]) - 1] * 100:.1f}%]")
         plt.tight_layout()
@@ -543,7 +542,7 @@ class MatplotlibBackend(VisualizationBackend):
 
     def plot_sankey(
         self,
-        food_counts: "FoodCounts",
+        RDD_counts: "RDDCounts",
         color_mapping_file: str,
         max_hierarchy_level: Optional[int] = None,
         filename_filter: Optional[str] = None,
@@ -561,16 +560,16 @@ class MatplotlibBackend(VisualizationBackend):
 
 class PlotlyBackend(VisualizationBackend):
 
-    def plot_food_type_distribution(
+    def plot_reference_type_distribution(
         self, data: pd.DataFrame, group_by: bool, figsize: Tuple[int, int], **kwargs
     ):
         """
-        Render a bar chart for food type distribution using Plotly.
+        Render a bar chart for reference type distribution using Plotly.
 
         Parameters
         ----------
         data : pd.DataFrame
-            The filtered and grouped food counts data.
+            The filtered and grouped RDD counts data.
         group_by : bool
             Whether to group by the 'group' column.
         figsize : tuple of int
@@ -584,31 +583,31 @@ class PlotlyBackend(VisualizationBackend):
         if group_by:
             fig = px.bar(
                 data,
-                x="food_type",
+                x="reference_type",
                 y="count",
                 color="group",
                 barmode="group",
-                title="Food Type Distribution by Group",
+                title="reference type Distribution by Group",
                 **kwargs,
             )
         else:
             fig = px.bar(
                 data,
-                x="food_type",
+                x="reference_type",
                 y="count",
-                title="Food Type Distribution",
+                title="reference type Distribution",
                 **kwargs,
             )
 
         fig.update_layout(
-            xaxis_title="Food Type",
+            xaxis_title="reference type",
             yaxis_title="Total Count",
             xaxis_tickangle=-45,
             template="plotly_white",
         )
         return fig
     
-    def box_plot_food_proportions(
+    def box_plot_RDD_proportions(
         self,
         data: pd.DataFrame,
         group_by: bool = False,
@@ -624,7 +623,7 @@ class PlotlyBackend(VisualizationBackend):
                 group_data = data[data["group"] == group]
                 fig.add_trace(
                     go.Box(
-                        x=group_data["food_type"],
+                        x=group_data["reference_type"],
                         y=group_data["proportion"],
                         name=group,
                         boxpoints="all",
@@ -637,32 +636,32 @@ class PlotlyBackend(VisualizationBackend):
                     )
                 )
         else:
-            # Add one boxplot trace per food type
-            for food_type in data["food_type"].unique():
-                food_data = data[data["food_type"] == food_type]
+            # Add one boxplot trace per reference type
+            for reference_type in data["reference_type"].unique():
+                RDD_data = data[data["reference_type"] == reference_type]
                 fig.add_trace(
                     go.Box(
-                        x=food_data["food_type"],
-                        y=food_data["proportion"],
-                        name=food_type,
+                        x=RDD_data["reference_type"],
+                        y=RDD_data["proportion"],
+                        name=reference_type,
                         boxpoints="all",
                         jitter=0.3,
                         pointpos=0,
                         marker=dict(
-                            color=group_colors.get(food_type) if group_colors else None
+                            color=group_colors.get(reference_type) if group_colors else None
                         ),
                     )
                 )
 
         fig.update_layout(
-            title="Proportion Distribution of Selected Food Types",
-            xaxis_title="Food Type",
+            title="Proportion Distribution of Selected reference types",
+            xaxis_title="reference type",
             yaxis_title="Proportion",
             boxmode="group" if group_by else "overlay",
         )
         return fig
     
-    def plot_food_proportion_heatmap(
+    def plot_RDD_proportion_heatmap(
         self,
         data: pd.DataFrame,
         level: int,
@@ -670,12 +669,12 @@ class PlotlyBackend(VisualizationBackend):
         **kwargs,
     ):
         """
-        Render a heatmap of food proportions using Plotly.
+        Render a heatmap of RDD proportions using Plotly.
 
         Parameters
         ----------
         data : pd.DataFrame
-            The processed data containing food proportions.
+            The processed data containing RDD proportions.
         level : int
             The ontology level of the data.
         figsize : tuple of int, optional
@@ -697,8 +696,8 @@ class PlotlyBackend(VisualizationBackend):
             )
         )
         fig.update_layout(
-            title=f"Proportion Heatmap of Food Types (Level {level})",
-            xaxis_title="Food Types",
+            title=f"Proportion Heatmap of reference types (Level {level})",
+            xaxis_title="reference types",
             yaxis_title="Samples",
         )
         return fig
@@ -767,7 +766,7 @@ class PlotlyBackend(VisualizationBackend):
             )
 
         fig.update_layout(
-            title="PCA Plot of Food Counts",
+            title="PCA Plot of RDD Counts",
             xaxis_title=f"{x_pc} [{explained_variance[int(x_pc[2]) - 1] * 100:.1f}%]",
             yaxis_title=f"{y_pc} [{explained_variance[int(y_pc[2]) - 1] * 100:.1f}%]",
             template="plotly_white",
@@ -817,19 +816,19 @@ class PlotlyBackend(VisualizationBackend):
     
     def plot_sankey(
         self,
-        food_counts: "FoodCounts",
+        RDD_counts: "RDDCounts",
         color_mapping_file: str,
         max_hierarchy_level: Optional[int] = None,
         filename_filter: Optional[str] = None,
         dark_mode: bool = False,
     ) -> go.Figure:
         """
-        Visualize the food flows as a Sankey diagram using Plotly.
+        Visualize the RDD flows as a Sankey diagram using Plotly.
 
         Parameters
         ----------
-        food_counts : FoodCounts
-            An instance of FoodCounts containing the food counts data.
+        RDD_counts : RDDCounts
+            An instance of RDDCounts containing the RDD counts data.
         color_mapping_file : str
             CSV file mapping the sample types to their respective colors.
         max_hierarchy_level : int, optional
@@ -844,8 +843,8 @@ class PlotlyBackend(VisualizationBackend):
         plotly.graph_objects.Figure
             The figure object for the Sankey diagram.
         """
-        # Generate flows and processes using FoodCounts
-        flows_df, processes_df = food_counts.generate_foodflows(
+        # Generate flows and processes using RDDCounts
+        flows_df, processes_df = RDD_counts.generate_RDDflows(
             max_hierarchy_level=max_hierarchy_level, filename_filter=filename_filter
         )
 
@@ -893,14 +892,14 @@ class PlotlyBackend(VisualizationBackend):
         # Apply dark or light theme
         if dark_mode:
             fig.update_layout(
-                title_text="Food Flows Sankey Diagram",
+                title_text="RDD Flows Sankey Diagram",
                 font=dict(color="white", size=12),
                 paper_bgcolor="black",
                 plot_bgcolor="black",
             )
         else:
             fig.update_layout(
-                title_text="Food Flows Sankey Diagram",
+                title_text="RDD Flows Sankey Diagram",
                 font=dict(color="black", size=12),
                 paper_bgcolor="white",
                 plot_bgcolor="white",
@@ -909,7 +908,7 @@ class PlotlyBackend(VisualizationBackend):
         return fig
       
 
-class Visualizer:
+class Visualizer: # pragma: no cover
     def __init__(self, backend: VisualizationBackend):
         self.backend = backend
 
@@ -924,26 +923,26 @@ class Visualizer:
         """
         self.backend = backend
 
-    def plot_food_type_distribution(
+    def plot_reference_type_distribution(
         self,
-        food_counts_instance: "FoodCounts",
+        RDD_counts_instance: "RDDCounts",
         level: int = 3,
-        food_types: Optional[List[str]] = None,
+        reference_types: Optional[List[str]] = None,
         group_by: bool = False,
         figsize: Tuple[int, int] = (10, 6),
         **kwargs,
     ):
         """
-        Plot a bar chart showing the distribution of food types.
+        Plot a bar chart showing the distribution of reference types.
 
         Parameters
         ----------
-        food_counts_instance : FoodCounts
-            An instance of the FoodCounts class containing the food counts data.
+        RDD_counts_instance : RDDCounts
+            An instance of the RDDCounts class containing the RDD counts data.
         level : int, optional
             The ontology level to filter by. Defaults to 3.
-        food_types : list of str, optional
-            Specific food types to include in the plot. If None, all food types
+        reference_types : list of str, optional
+            Specific reference types to include in the plot. If None, all reference types
             are included. Defaults to None.
         group_by : bool, optional
             Whether to group by the 'group' column in the plot. Defaults to False.
@@ -956,36 +955,36 @@ class Visualizer:
             The rendered figure object.
         """
         # Filter and group the data
-        data = filter_and_group_food_counts(
-            food_counts_instance, level, food_types, group_by
+        data = filter_and_group_RDD_counts(
+            RDD_counts_instance, level, reference_types, group_by
         )
 
         # Render using the backend
-        return self.backend.plot_food_type_distribution(
+        return self.backend.plot_reference_type_distribution(
             data, group_by=group_by, figsize=figsize, **kwargs
         )
     
-    def box_plot_food_proportions(
+    def box_plot_RDD_proportions(
             self,
-            food_counts_instance: "FoodCounts",
+            RDD_counts_instance: "RDDCounts",
             level: int = 3,
-            food_types: Optional[List[str]] = None,
+            reference_types: Optional[List[str]] = None,
             group_by: bool = False,
             group_colors: Optional[dict] = None,
             figsize: Tuple[int, int] = (10, 6),
             **kwargs,
         ):
             """
-            Plot box plots showing the distribution of food proportions.
+            Plot box plots showing the distribution of RDD proportions.
 
             Parameters
             ----------
-            food_counts_instance : FoodCounts
-                An instance of the FoodCounts class containing the food counts data.
+            RDD_counts_instance : RDDCounts
+                An instance of the RDDCounts class containing the RDD counts data.
             level : int, optional
                 The ontology level to filter by. Defaults to 3.
-            food_types : list of str, optional
-                Specific food types to include. Defaults to None.
+            reference_types : list of str, optional
+                Specific reference types to include. Defaults to None.
             group_by : bool, optional
                 If True, groups the data by the 'group' column. Defaults to False.
             group_colors : dict, optional
@@ -999,32 +998,32 @@ class Visualizer:
                 The rendered figure object.
             """
             # Prepare data
-            data = prepare_boxplot_data(food_counts_instance, level, food_types)
+            data = prepare_boxplot_data(RDD_counts_instance, level, reference_types)
 
             # Render using the backend
-            return self.backend.box_plot_food_proportions(
+            return self.backend.box_plot_RDD_proportions(
                 data, group_by=group_by, group_colors=group_colors, figsize=figsize, **kwargs
             )    
     
-    def plot_food_proportion_heatmap(
+    def plot_RDD_proportion_heatmap(
         self,
-        food_counts_instance: "FoodCounts",
+        RDD_counts_instance: "RDDCounts",
         level: int = 3,
-        food_types: Optional[List[str]] = None,
+        reference_types: Optional[List[str]] = None,
         figsize: Tuple[int, int] = (12, 8),
         **kwargs,
     ):
         """
-        Plot a heatmap of food proportions for selected food types.
+        Plot a heatmap of RDD proportions for selected reference types.
 
         Parameters
         ----------
-        food_counts_instance : FoodCounts
-            An instance of the FoodCounts class containing the food counts data.
+        RDD_counts_instance : RDDCounts
+            An instance of the RDDCounts class containing the RDD counts data.
         level : int, optional
             The ontology level to filter by. Defaults to 3.
-        food_types : list of str, optional
-            Specific food types to include in the heatmap. Defaults to None.
+        reference_types : list of str, optional
+            Specific reference types to include in the heatmap. Defaults to None.
         figsize : tuple of int, optional
             The size of the figure (width, height). Defaults to (12, 8).
 
@@ -1034,10 +1033,10 @@ class Visualizer:
             The rendered heatmap.
         """
         # Prepare data
-        data = prepare_heatmap_data(food_counts_instance, level, food_types)
+        data = prepare_heatmap_data(RDD_counts_instance, level, reference_types)
 
         # Render using the backend
-        return self.backend.plot_food_proportion_heatmap(
+        return self.backend.plot_RDD_proportion_heatmap(
             data, level=level, figsize=figsize, **kwargs
         )
     
@@ -1115,7 +1114,7 @@ class Visualizer:
     
     def plot_sankey(
         self,
-        food_counts: "FoodCounts",
+        RDD_counts: "RDDCounts",
         color_mapping_file: str,
         max_hierarchy_level: Optional[int] = None,
         filename_filter: Optional[str] = None,
@@ -1126,8 +1125,8 @@ class Visualizer:
 
         Parameters
         ----------
-        food_counts : FoodCounts
-            An instance of FoodCounts containing the food counts data.
+        RDD_counts : RDDCounts
+            An instance of RDDCounts containing the RDD counts data.
         color_mapping_file : str
             CSV file mapping the sample types to their respective colors.
         max_hierarchy_level : int, optional
@@ -1143,7 +1142,7 @@ class Visualizer:
             The figure object for the Sankey diagram.
         """
         return self.backend.plot_sankey(
-            food_counts=food_counts,
+            RDD_counts=RDD_counts,
             color_mapping_file=color_mapping_file,
             max_hierarchy_level=max_hierarchy_level,
             filename_filter=filename_filter,

@@ -8,34 +8,58 @@ from typing import List, Optional
 import pandas as pd
 
 
-def _load_food_metadata() -> pd.DataFrame:
+def _load_RDD_metadata(external_metadata: Optional[str] = None) -> pd.DataFrame:
     """
-    Reads Global FoodOmics ontology and metadata.
+    Reads ontology and metadata from the default file or an external file.
+
+    Parameters
+    ----------
+    external_metadata : str, optional
+        Path to an external metadata file. If provided, this file will be loaded.
+        If None, the default internal metadata will be used.
 
     Returns
     -------
     pd.DataFrame
-        A DataFrame containing Global FoodOmics ontology and metadata.
+        A DataFrame containing ontology and metadata.
+
+    Raises
+    ------
+    FileNotFoundError
+        If the external file path does not exist.
+    ValueError
+        If the external file is not in a valid format (must be a CSV/TSV).
     """
-    # Use importlib.resources if possible; fall back to pkg_resources
-    try:
-        with resources.open_text(
-            "data", "foodomics_multiproject_metadata.txt"
-        ) as stream:
+    if external_metadata:
+        # Load user-provided metadata
+        if not external_metadata.lower().endswith((".csv", ".tsv", ".txt")):
+            raise ValueError("External metadata file must be a CSV, TSV, or TXT.")
+        
+        # Detect separator based on file extension
+        sep = "\t" if external_metadata.lower().endswith((".tsv", ".txt")) else ","
+        
+        try:
+            return pd.read_csv(external_metadata, sep=sep)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"External metadata file '{external_metadata}' not found.")
+    else:
+        # Default behavior: load internal metadata
+        try:
+            with resources.open_text("data", "foodomics_multiproject_metadata.txt") as stream:
+                gfop_metadata = pd.read_csv(stream, sep="\t")
+        except (ModuleNotFoundError, ImportError):
+            stream = pkg_resources.resource_stream(
+                __name__, "data/foodomics_multiproject_metadata.txt"
+            )
             gfop_metadata = pd.read_csv(stream, sep="\t")
-    except (ModuleNotFoundError, ImportError):
-        stream = pkg_resources.resource_stream(
-            __name__, "data/foodomics_multiproject_metadata.txt"
-        )
-        gfop_metadata = pd.read_csv(stream, sep="\t")
-    return gfop_metadata
+        return gfop_metadata
 
 
 def _load_sample_types(
     gfop_metadata: pd.DataFrame, simple_complex: str = "all"
 ) -> pd.DataFrame:
     """
-    Filters Global FoodOmics metadata by simple, complex, or all types of foods.
+    Filters metadata by simple, complex, or all types of references.
 
     Parameters
     ----------
@@ -47,7 +71,7 @@ def _load_sample_types(
     Returns
     -------
     pd.DataFrame
-        A filtered DataFrame of Global FoodOmics ontology.
+        A filtered DataFrame of ontology.
     """
     if simple_complex != "all":
         gfop_metadata = gfop_metadata[gfop_metadata["simple_complex"] == simple_complex]
@@ -82,17 +106,17 @@ def _validate_groups(gnps_network: pd.DataFrame, groups_included: List[str]) -> 
         )
 
 
-def food_counts_to_wide(food_counts: pd.DataFrame, level: int = None) -> pd.DataFrame:
+def RDD_counts_to_wide(RDD_counts: pd.DataFrame, level: int = None) -> pd.DataFrame:
     """
-    Convert the food counts dataframe from long to wide format for a specific
+    Convert the RDD counts dataframe from long to wide format for a specific
     ontology level, with 'group' as part of the columns. If the data is already
     filtered by level, no level needs to be passed.
 
     Parameters
     ----------
-    food_counts : pd.DataFrame
-        A long-format DataFrame with columns ['filename', 'food_type', 'count',
-        'level', 'group'] representing food counts across different ontology
+    RDD_counts : pd.DataFrame
+        A long-format DataFrame with columns ['filename', 'reference_type', 'count',
+        'level', 'group'] representing RDD counts across different ontology
         levels and groups.
     level : int, optional
         The ontology level to filter by before converting to wide format. If
@@ -101,7 +125,7 @@ def food_counts_to_wide(food_counts: pd.DataFrame, level: int = None) -> pd.Data
     Returns
     -------
     pd.DataFrame
-        A wide-format DataFrame where each combination of 'food_type' and
+        A wide-format DataFrame where each combination of 'reference_type' and
         'group' becomes a column, and rows are indexed by 'filename'.
 
     Raises
@@ -112,43 +136,43 @@ def food_counts_to_wide(food_counts: pd.DataFrame, level: int = None) -> pd.Data
     """
     # If level is not specified, infer the level from the data
     if level is None:
-        levels_in_data = food_counts["level"].unique()
+        levels_in_data = RDD_counts["level"].unique()
         if len(levels_in_data) > 1:
             raise ValueError(
                 "Multiple levels found in the data. Please specify a level to convert to wide format."
             )
         level = levels_in_data[0]  # If the data is already filtered, use that level
 
-    # Filter the food counts dataframe by the specified level, if not already filtered
-    filtered_food_counts = food_counts[food_counts["level"] == level]
+    # Filter the RDD counts dataframe by the specified level, if not already filtered
+    filtered_RDD_counts = RDD_counts[RDD_counts["level"] == level]
 
-    if filtered_food_counts.empty:
+    if filtered_RDD_counts.empty:
         raise ValueError(f"No data available for level {level}")
 
-    # Pivot the filtered dataframe to wide format with 'food_type' and 'group' as columns
-    food_counts_wide = filtered_food_counts.pivot_table(
-        index="filename", columns="food_type", values="count", fill_value=0
+    # Pivot the filtered dataframe to wide format with 'reference_type' and 'group' as columns
+    RDD_counts_wide = filtered_RDD_counts.pivot_table(
+        index="filename", columns="reference_type", values="count", fill_value=0
     )
     group_df = (
-        filtered_food_counts[["filename", "group"]]
+        filtered_RDD_counts[["filename", "group"]]
         .drop_duplicates()
         .set_index("filename")
     )
-    wide_format_food_counts = food_counts_wide.join(group_df)
+    wide_format_RDD_counts = RDD_counts_wide.join(group_df)
 
-    return wide_format_food_counts
+    return wide_format_RDD_counts
 
 
-def calculate_proportions(food_counts: pd.DataFrame, level: int = None) -> pd.DataFrame:
+def calculate_proportions(RDD_counts: pd.DataFrame, level: int = None) -> pd.DataFrame:
     """
-    Calculate the proportion of each food type within each sample for a given
+    Calculate the proportion of each reference type within each sample for a given
     level.
 
     Parameters
     ----------
-    food_counts : pd.DataFrame
-        A long-format DataFrame with columns ['filename', 'food_type', 'count',
-        'level', 'group'] representing food counts across different ontology
+    RDD_counts : pd.DataFrame
+        A long-format DataFrame with columns ['filename', 'reference_type', 'count',
+        'level', 'group'] representing RDD counts across different ontology
         levels and groups.
     level : int, optional
         The ontology level to filter by before calculating proportions. If None,
@@ -157,8 +181,8 @@ def calculate_proportions(food_counts: pd.DataFrame, level: int = None) -> pd.Da
     Returns
     -------
     pd.DataFrame
-        A wide-format DataFrame where each food type column contains the
-        proportion of that food type within each sample (row). Rows are indexed
+        A wide-format DataFrame where each reference type column contains the
+        proportion of that reference type within each sample (row). Rows are indexed
         by 'filename', and proportions sum to 1 for each sample.
 
     Raises
@@ -168,7 +192,7 @@ def calculate_proportions(food_counts: pd.DataFrame, level: int = None) -> pd.Da
     """
     # If level is not specified, infer the level from the data
     if level is None:
-        levels_in_data = food_counts["level"].unique()
+        levels_in_data = RDD_counts["level"].unique()
         if len(levels_in_data) > 1:
             raise ValueError(
                 "Multiple levels found in the data. Please specify a level to calculate proportions."
@@ -176,12 +200,12 @@ def calculate_proportions(food_counts: pd.DataFrame, level: int = None) -> pd.Da
         level = levels_in_data[0]  # If the data is already filtered, use that level
 
     # Use the existing function to convert to wide format
-    df_wide = food_counts_to_wide(food_counts, level)
+    df_wide = RDD_counts_to_wide(RDD_counts, level)
 
-    # Identify numeric columns (food type counts)
+    # Identify numeric columns (reference type counts)
     numeric_cols = df_wide.select_dtypes(include=[float, int]).columns
 
-    # Calculate proportions across food types (columns) for each sample (row)
+    # Calculate proportions across reference types (columns) for each sample (row)
     df_proportions = df_wide.copy()
     df_proportions[numeric_cols] = (
         df_proportions[numeric_cols]
