@@ -69,6 +69,7 @@ def mock_gnps_and_metadata(tmp_path):
 
     return gnps_path, metadata_path
 
+
 @pytest.fixture
 def rdd_counts_instance(mock_gnps_and_metadata):
     """
@@ -96,6 +97,7 @@ def rdd_counts_instance(mock_gnps_and_metadata):
         external_metadata=str(metadata_path),
     )
 
+
 def test_plot_reference_type_distribution(rdd_counts_instance):
     """
     Test the reference type distribution visualization.
@@ -112,6 +114,7 @@ def test_plot_reference_type_distribution(rdd_counts_instance):
     )
 
     assert isinstance(fig, plt.Figure), "Output should be a Matplotlib figure"
+
 
 def test_box_plot_RDD_proportions(rdd_counts_instance):
     """
@@ -130,6 +133,7 @@ def test_box_plot_RDD_proportions(rdd_counts_instance):
 
     assert isinstance(fig, plt.Figure), "Output should be a Matplotlib figure"
 
+
 def test_plot_RDD_proportion_heatmap(rdd_counts_instance):
     """
     Test the heatmap visualization for RDD proportions.
@@ -145,6 +149,7 @@ def test_plot_RDD_proportion_heatmap(rdd_counts_instance):
     )
 
     assert isinstance(fig, plt.Figure), "Output should be a Matplotlib figure"
+
 
 def test_plot_pca_results(rdd_counts_instance):
     """
@@ -170,6 +175,7 @@ def test_plot_pca_results(rdd_counts_instance):
 
     assert isinstance(fig, plt.Figure), "Output should be a Matplotlib figure"
 
+
 def test_plot_explained_variance():
     """
     Test the explained variance bar chart for PCA.
@@ -187,6 +193,7 @@ def test_plot_explained_variance():
 
     assert isinstance(fig, plt.Figure), "Output should be a Matplotlib figure"
 
+
 def test_plot_reference_type_distribution_plotly(rdd_counts_instance):
     backend = PlotlyBackend()
     visualizer = Visualizer(backend)
@@ -199,6 +206,7 @@ def test_plot_reference_type_distribution_plotly(rdd_counts_instance):
     # Assertions
     assert isinstance(fig, go.Figure), "Output should be a Plotly figure"
     assert len(fig.data) > 0, "Figure should contain data"
+
 
 def test_box_plot_RDD_proportions_plotly(rdd_counts_instance):
     backend = PlotlyBackend()
@@ -213,14 +221,13 @@ def test_box_plot_RDD_proportions_plotly(rdd_counts_instance):
     assert isinstance(fig, go.Figure), "Output should be a Plotly figure"
     assert len(fig.data) > 0, "Figure should contain data"
 
+
 def test_plot_RDD_proportion_heatmap_plotly(rdd_counts_instance):
     backend = PlotlyBackend()
     visualizer = Visualizer(backend)
 
     # Generate the plot
-    fig = visualizer.plot_RDD_proportion_heatmap(
-        rdd_counts_instance, level=3
-    )
+    fig = visualizer.plot_RDD_proportion_heatmap(rdd_counts_instance, level=3)
 
     # Assertions
     assert isinstance(fig, go.Figure), "Output should be a Plotly figure"
@@ -232,12 +239,14 @@ def test_plot_pca_results_plotly(rdd_counts_instance):
     visualizer = Visualizer(backend)
 
     # Mock PCA data
-    pca_df = pd.DataFrame({
-        "PC1": [1.0, 2.0, 3.0],
-        "PC2": [2.0, 3.0, 4.0],
-        "filename": ["file1", "file2", "file3"],
-        "group": ["G1", "G2", "G1"],
-    })
+    pca_df = pd.DataFrame(
+        {
+            "PC1": [1.0, 2.0, 3.0],
+            "PC2": [2.0, 3.0, 4.0],
+            "filename": ["file1", "file2", "file3"],
+            "group": ["G1", "G2", "G1"],
+        }
+    )
     explained_variance = [0.7, 0.2]
 
     # Generate the plot
@@ -263,6 +272,7 @@ def test_plot_explained_variance_plotly():
     # Assertions
     assert isinstance(fig, go.Figure), "Output should be a Plotly figure"
     assert len(fig.data) > 0, "Figure should contain data"
+
 
 def test_plot_sankey_plotly(rdd_counts_instance, tmp_path):
     backend = PlotlyBackend()

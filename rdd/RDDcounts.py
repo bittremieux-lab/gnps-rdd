@@ -279,6 +279,11 @@ class RDDCounts:
         pd.DataFrame
             A DataFrame containing the filtered RDD counts with columns: filename,
             reference type, level, count, and group.
+        
+        Raises
+        ------
+        ValueError
+            If the  RDD counts have not been yet created
         """
         if self.counts is None:
             raise ValueError(

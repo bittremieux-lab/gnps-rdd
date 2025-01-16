@@ -34,18 +34,22 @@ def _load_RDD_metadata(external_metadata: Optional[str] = None) -> pd.DataFrame:
         # Load user-provided metadata
         if not external_metadata.lower().endswith((".csv", ".tsv", ".txt")):
             raise ValueError("External metadata file must be a CSV, TSV, or TXT.")
-        
+
         # Detect separator based on file extension
         sep = "\t" if external_metadata.lower().endswith((".tsv", ".txt")) else ","
-        
+
         try:
             return pd.read_csv(external_metadata, sep=sep)
         except FileNotFoundError:
-            raise FileNotFoundError(f"External metadata file '{external_metadata}' not found.")
+            raise FileNotFoundError(
+                f"External metadata file '{external_metadata}' not found."
+            )
     else:
         # Default behavior: load internal metadata
         try:
-            with resources.open_text("data", "foodomics_multiproject_metadata.txt") as stream:
+            with resources.open_text(
+                "data", "foodomics_multiproject_metadata.txt"
+            ) as stream:
                 reference_metadata = pd.read_csv(stream, sep="\t")
         except (ModuleNotFoundError, ImportError):
             stream = pkg_resources.resource_stream(
@@ -74,7 +78,9 @@ def _load_sample_types(
         A filtered DataFrame of ontology.
     """
     if simple_complex != "all":
-        reference_metadata = reference_metadata[reference_metadata["simple_complex"] == simple_complex]
+        reference_metadata = reference_metadata[
+            reference_metadata["simple_complex"] == simple_complex
+        ]
 
     col_sample_types = ["sample_name"] + [f"sample_type_group{i}" for i in range(1, 7)]
     return reference_metadata[["filename", *col_sample_types]].set_index("filename")
